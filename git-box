@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# git-box:
+#   clones and lists repos from DROPBOX_GIT_PATH or ~/Dropbox/git
+
+USAGE=<<EOF
+Usage: git-box COMMAND [REPO]
+   commands: clone, ls
+EOF
+
+function box-path {
+  if [ -z "$DROPBOX_GIT_PATH" ]; then
+    echo $HOME/Dropbox/git
+  else
+    echo $DROPBOX_GIT_PATH
+  fi
+}
+
+if [ "$1" == "clone" ]; then
+  if [ -z "$2" ]; then
+    echo $USAGE
+  else
+    echo cloning from $path...
+    $(git clone "$(box-path)/${2}.git")
+  fi
+elif [ "$1" == "ls" ]; then
+  ls -1 $(box-path) | sed s/.git$//;
+else
+  echo $USAGE
+fi
